@@ -2,14 +2,14 @@
     <TopHeader />
     <div class="common-layout">
         <el-container class="container">
-            <el-aside class="aside" width="270px">
-                <el-menu router="true" active-text-color="#ffd04b" text-color="#fff" background-color="#545c64"
+            <el-aside class="aside" width="200px">
+                <el-menu :router="true" active-text-color="#ffd04b" text-color="#fff" background-color="#545c64"
                     default-active="/user/center">
-                    <el-menu-item route="/user/center" index="/user/center">User Center</el-menu-item>
-                    <el-menu-item route="/user/address" index="/user/address">My Address</el-menu-item>
-                    <el-menu-item route="/user/favorite" index="/user/favorite">My Favorites</el-menu-item>
-                    <el-menu-item route="/user/order" index="/user/order">My Order</el-menu-item>
-                    <el-menu-item route="/user/recharge" index="/user/recharge">My Recharge</el-menu-item>
+                    <el-menu-item route="/user/center" index="/user/center">个人中心</el-menu-item>
+                    <el-menu-item route="/user/address" index="/user/address">收获地址</el-menu-item>
+                    <el-menu-item route="/user/favorite" index="/user/favorite">收藏商品</el-menu-item>
+                    <el-menu-item route="/user/order" index="/user/order">我的订单</el-menu-item>
+                    <el-menu-item route="/user/recharge" index="/user/recharge">充值记录</el-menu-item>
                 </el-menu>
             </el-aside>
             <el-main class="main">

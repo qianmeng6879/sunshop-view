@@ -8,19 +8,10 @@
     <h3 class="title">用户登录</h3>
     <el-form label-position="top">
       <el-form-item label="用户名">
-        <el-input
-          v-model="userinfo.username"
-          class="form_input"
-          placeholder="username"
-        />
+        <el-input v-model="userinfo.username" class="form_input" placeholder="username" />
       </el-form-item>
       <el-form-item label="密码">
-        <el-input
-          type="password"
-          v-model="userinfo.password"
-          class="form_input"
-          placeholder="password"
-        />
+        <el-input type="password" v-model="userinfo.password" class="form_input" placeholder="password" />
       </el-form-item>
       <el-button @click="onLogin" class="login_button">登录</el-button>
     </el-form>
@@ -46,15 +37,16 @@ export default {
       if (this.loginState) {
         this.$message.error("请不要重复点击登录");
       } else {
+        this.loginState = true
         getUserTokenAPI(this.userinfo.username, this.userinfo.password).then(
           (response) => {
-            localStorage.setItem("accessToken", response.data.token);
-            this.loginState =  true
-            this.$router.replace("/");
-          }catch(()=>{
             this.loginState = false
-          })
-        );
+            localStorage.setItem("accessToken", response.data.token);
+            this.$router.replace("/");
+          }
+        ).catch(() => {
+          this.loginState = false
+        })
       }
     },
   },
