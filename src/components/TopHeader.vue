@@ -1,65 +1,103 @@
 <template>
-    <div class="header">
-        <el-row>
-            <el-link type="info">home</el-link>
-            <el-link type="info">about</el-link>
-            <el-link type="info">communicaty</el-link>
-        </el-row>
-        <el-dropdown style="margin-left: auto;" trigger="click">
-            <el-button type="info">
-                My account
-                <el-icon>
-                    <CaretBottom />
-                </el-icon>
-            </el-button>
-            <template #dropdown>
-                <el-dropdown-menu>
-                    <el-dropdown-item>Action 1</el-dropdown-item>
-                    <el-dropdown-item>Action 2</el-dropdown-item>
-                </el-dropdown-menu>
-            </template>
-        </el-dropdown>
-    </div>
-    <div class="logo_section">
-        <span class="sun">SUN</span>
-        <span class="shop">SHOP</span>
-        <div style="margin-left:auto">
-            <h4 style="font-size: 16px; color: #6C757D;font-weight: 400;">Customer Service </h4>
-            <h5 style="font-size: 20px; color: #3D464D;font-weight: 500;    font-family: 'Roboto';">+012
-                345 6789</h5>
+    <div style="background: #333;">
+        <div class="header">
+            <el-row>
+                <router-link to="/">
+                    <span class="header_item">太阳商城</span>
+                </router-link>
+                <a href="#">
+                    <span class="header_item">关于我们</span>
+                </a>
+                <a href="#">
+                    <span class="header_item">社区交流</span>
+                </a>
+            </el-row>
+
+            <el-dropdown v-if="username" style="margin-left: auto;">
+                <span class="header_item">
+                    {{ username }}
+                    <el-icon>
+                        <ArrowDownBold />
+                    </el-icon>
+                </span>
+
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item @click="$router.push('/user/center')">个人中心</el-dropdown-item>
+                        <el-dropdown-item style="color: #be4646" @click="onLogout">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+            <div v-else style="margin-left: auto;">
+                <el-row>
+                    <router-link to="/login">
+                        <span class="header_item">登录</span>
+                    </router-link>
+                    <router-link to="/register">
+                        <span class="header_item">注册</span>
+                    </router-link>
+                </el-row>
+            </div>
         </div>
     </div>
-    <div class="nav-out">
-        <div class="nav">
-            <div class="category">
-                <el-icon>
-                    <Operation />
-                </el-icon>
-                <span>Categories</span>
-            </div>
-            <div class="favorite">
-                <el-icon>
-                    <ShoppingCart />
-                </el-icon>
+    <div style="background: white">
+        <div class="logo_section">
+            <span class="sun">SUN</span>
+            <span class="shop">SHOP</span>
+            <div style="margin-left:auto">
+                <h4 style="font-size: 16px; color: #6C757D;font-weight: 400;">Customer Service </h4>
+                <h5 style="font-size: 20px; color: #3D464D;font-weight: 500;    font-family: 'Roboto';">+012
+                    345 6789</h5>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { ref } from 'vue'
 export default {
-
+    setup() {
+        let username = ref('')
+        return {
+            username
+        }
+    },
+    mounted() {
+        let username = sessionStorage.getItem("username") || ''
+        if (username !== '') {
+            this.username = username
+        }
+    },
+    methods: {
+        onLogout() {
+            localStorage.clear()
+            sessionStorage.clear()
+            this.$message.success('退出成功')
+            // 刷新当前页面
+            this.$router.push('/login')
+        }
+    }
 }
 </script>
 
 <style lang="less" scoped>
 .header {
+    width: 1230px;
     display: flex;
-    width: 90%;
-    padding: 5px 10px;
     margin: auto;
     font-size: 18px;
     color: rgb(124, 122, 119);
+
+    .header_item {
+        color: #b0b0b0;
+        line-height: 40px;
+        font-size: 12px;
+        padding: 0 10px;
+    }
+
+    .header_item:hover {
+        color: white
+    }
 
     .el-link {
         margin-right: 8px;
@@ -71,7 +109,7 @@ export default {
 }
 
 .logo_section {
-    width: 90%;
+    width: 1230px;
     height: 50px;
     margin: auto;
     margin-bottom: 10px;
@@ -94,32 +132,5 @@ export default {
         font-size: 2.5rem;
         padding: 0 0.5rem
     }
-}
-
-.nav-out {
-    height: 70px;
-    background-color: #3D464D;
-
-    .nav {
-        margin: auto;
-        width: 90%;
-        display: flex;
-        height: 100%;
-        align-items: center;
-        justify-content: center;
-
-        .category {
-            width: 425px;
-            line-height: 60px;
-            padding-left: 30px;
-            height: 100%;
-            background: #FFD333;
-        }
-
-        .favorite {
-            margin-left: auto;
-        }
-    }
-
 }
 </style>

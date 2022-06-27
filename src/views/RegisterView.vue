@@ -28,6 +28,7 @@
 <script>
 import { reactive } from "@vue/reactivity";
 import TopHeader from '@/components/TopHeader'
+import { userRegisterAPI } from '@/api'
 export default {
     components: { TopHeader },
     setup() {
@@ -48,15 +49,20 @@ export default {
                 return this.$message.error("两次密码不一致")
             }
 
-            this.$router.push("/login")
+            userRegisterAPI(this.userinfo).then(
+                () => {
+                    this.$message.success('注册成功')
+                    setTimeout(() => {
+                        this.$router.push("/login")
+                    }, 500);
+                }
+            )
         }
     }
 };
 </script>
 
 <style lang="less" scoped>
-
-
 .register {
     width: 400px;
     margin: auto;

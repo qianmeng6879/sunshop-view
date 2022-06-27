@@ -42,6 +42,7 @@ export default {
           (response) => {
             this.loginState = false
             localStorage.setItem("accessToken", response.data.token);
+            sessionStorage.setItem("username", 'zero');
             this.$router.replace("/");
           }
         ).catch(() => {

@@ -40,6 +40,16 @@ export function getUserTokenAPI(username, password) {
     return axios.post(local_host + "/users/token/create", { username, password })
 }
 
+// 获取当亲登录用户信息
+export function getCurrentUserInfoAPI() {
+    return axios.get(local_host + '/users/current')
+}
+
+// 用户注册
+export function userRegisterAPI(userinfo) {
+    return axios.post(local_host + '/users/create', { ...userinfo })
+}
+
 // 商品分类列表
 export function getCategoryListAPI() {
     return axios.get(local_host + '/categories/list')
