@@ -9,7 +9,7 @@
                     <li v-for="image in category.images" :key="image" class="hot_item">
                         <a href="#">
                             <img style="width: 40px; height: 40px;" :src="'/static/images/' + image.image" alt="">
-                            <span class="name">{{image.name}}</span></a>
+                            <span class="name">{{ image.name }}</span></a>
                     </li>
                 </ul>
             </a>

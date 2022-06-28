@@ -61,6 +61,26 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/UserCenter/UserCenterRecharge.vue')
       },
     ]
+  },
+  {
+    path: '/product/:id',
+    name: 'productDetail',
+    component: () => import('@/views/ProductDetail.vue')
+  },
+  {
+    path: '/order/create/:id',
+    name: 'createOrder',
+    component: () => import('@/views/CreateOrder.vue')
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('@/views/admin/Admin.vue')
+  },
+  {
+    path: '/:cathchAll(.*)',
+    name: '404',
+    component: () => import('@/views/404.vue')
   }
 ]
 
