@@ -1,7 +1,7 @@
 
 module.exports = {
 	devServer: {
-		port: 8080,
+		port: 3000,
 		proxy: {
 			"/api": {
 				target: 'https://www.mxzero.top/api',

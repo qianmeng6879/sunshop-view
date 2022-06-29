@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     onShowDetail(id) {
-      this.$message.success("查看详情 " + id)
+      this.$router.push('/order/detail/' + id)
     }
   }
 }

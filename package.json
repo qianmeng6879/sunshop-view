@@ -12,6 +12,7 @@
     "@element-plus/icons-vue": "^2.0.5",
     "axios": "^0.27.2",
     "element-plus": "^2.2.6",
+    "json-bigint": "^1.0.0",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.3",

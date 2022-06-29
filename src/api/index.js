@@ -1,6 +1,18 @@
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
 import router from '@/router'
+import jsonBig from 'json-bigint'
+
+axios.defaults.transformResponse = [
+    function (data) {
+        try {
+            return jsonBig.parse(data)
+        } catch (err) {
+            console.log(err);
+            return {}
+        }
+    }
+]
 
 
 axios.interceptors.request.use(config => {
@@ -40,7 +52,7 @@ export function getUserTokenAPI(username, password) {
     return axios.post(local_host + "/users/token/create", { username, password })
 }
 
-// 获取当亲登录用户信息
+// 获取当前登录用户信息
 export function getCurrentUserInfoAPI() {
     return axios.get(local_host + '/users/current')
 }
@@ -55,9 +67,24 @@ export function getCategoryListAPI() {
     return axios.get(local_host + '/categories/list')
 }
 
-// 收获地址列表
+// 收货地址列表
 export function getAddressListAPI() {
     return axios.get(local_host + '/address/list')
+}
+
+// 新增收货地址
+export function addAddressAPI(addressObj) {
+    return axios.post(local_host + '/address/create', { ...addressObj })
+}
+
+// 删除收货地址
+export function removeAddressAPI(addressId) {
+    return axios.delete(local_host + '/address/remove/' + addressId)
+}
+
+// 编辑收货地址信息
+export function editAddresssAPI(addressId, addressObj) {
+    return axios.put(local_host + '/address/edit/' + addressId, { ...addressObj })
 }
 
 // 订单列表
@@ -65,12 +92,37 @@ export function getOrderListAPI() {
     return axios.get(local_host + '/orders/list')
 }
 
+// 获取订单详情信息
+export function getOrderDetailAPI(orderId) {
+    return axios.get(local_host + '/orders/' + orderId)
+}
+
+// 创建订单
+export function createOrderAPI(orderObj) {
+    return axios.post(local_host + '/orders/create', { ...orderObj })
+}
+
 // 收藏列表
 export function getFavoriteListAPI() {
     return axios.get(local_host + '/favorites/list')
 }
 
+// 新增收藏
+export function createFovoriteAPI(productId) {
+    return axios.post(local_host + '/favorites/create/' + productId)
+}
+
+// 取消收藏
+export function cancelFovoriteAPI(id) {
+    return axios.delete(local_host + '/favorites/remove/' + id)
+}
+
 // 充值记录
 export function getRechargeListAPI() {
     return axios.get(local_host + '/recharges/list')
+}
+
+// 充值接口
+export function createExchargeAPI(amount) {
+    return axios.post(local_host + '/recharges/create', { amount })
 }
