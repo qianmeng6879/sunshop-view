@@ -113,8 +113,13 @@ export function createFovoriteAPI(productId) {
 }
 
 // 取消收藏
-export function cancelFovoriteAPI(id) {
-    return axios.delete(local_host + '/favorites/remove/' + id)
+export function cancelFovoriteAPI(productId) {
+    return axios.delete(local_host + '/favorites/remove/' + productId)
+}
+
+// 收藏接口
+export function createFavoteAPI(productId){
+    return axios.post(local_host + '/favorites/create/' + productId)
 }
 
 // 充值记录
