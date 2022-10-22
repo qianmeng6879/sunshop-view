@@ -21,7 +21,7 @@
 <script>
 import { reactive, ref } from "@vue/reactivity";
 import TopHeader from "@/components/TopHeader";
-import { getUserTokenAPI } from "@/api";
+import { getUserTokenAPI, getCurrentUserInfoAPI } from "@/api";
 export default {
   components: { TopHeader },
   setup() {
@@ -34,6 +34,14 @@ export default {
   },
   methods: {
     onLogin() {
+      if (!this.userinfo.username) {
+        return this.$message.error("用户名为空")
+      }
+
+      if (!this.userinfo.password) {
+        return this.$message.error("密码为空")
+      }
+
       if (this.loginState) {
         this.$message.error("请不要重复点击登录");
       } else {
@@ -41,9 +49,17 @@ export default {
         getUserTokenAPI(this.userinfo.username, this.userinfo.password).then(
           (response) => {
             this.loginState = false
-            localStorage.setItem("accessToken", response.data.token);
-            sessionStorage.setItem("username", 'zero');
+            sessionStorage.setItem("accessToken", response.data.data.accessToken);
+
+            getCurrentUserInfoAPI().then(
+              (response) => {
+                this.userinfo = response.data.data
+                this.username = this.userinfo.username
+                sessionStorage.setItem("username", this.username);
+              }
+            )
             this.$router.replace("/");
+            return
           }
         ).catch(() => {
           this.loginState = false
