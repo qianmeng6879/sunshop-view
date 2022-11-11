@@ -17,14 +17,18 @@
             <el-divider />
             <div>
                 <h4 class="choice_title">选择版本</h4>
+
                 <ul class="choice">
-                    <li v-for="store in storeVersion" :key="store.id">
-                        <a class="chice_item" href="#">
-                            <input :id="`store_version_${store.id}`" type="radio" name="version" />
-                            <label style="width: 100%;height:100px" :for="`store_version_${store.id}`">{{ store.name
-                            }}</label>
-                        </a>
-                    </li>
+                    <el-radio-group v-model="storeVersion">
+                        <el-radio-button v-for="store in storeVersion" :key="store.id">
+                            <a class="chice_item" href="#">
+                                <input :id="`store_version_${store.id}`" type="radio" name="version" />
+                                <label style="width: 100%;height:100px" :for="`store_version_${store.id}`">{{
+                                store.name
+                                }}</label>
+                            </a>
+                        </el-radio-button>
+                    </el-radio-group>
                 </ul>
                 <h4 class="choice_title">选择颜色</h4>
                 <ul class="choice">

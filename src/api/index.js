@@ -26,17 +26,17 @@ axios.interceptors.response.use(success => success,
         let response = error.response
         switch (response.status) {
             case 400:
-                ElMessage.error(response.data.message)
+                ElMessage.error(response.data.error)
                 break
             case 401:
-                ElMessage.error("未登录")
+                ElMessage.error("请先登录~")
                 router.push('/login')
                 break
             case 403:
                 ElMessage.error("无权限")
                 break
             default:
-                ElMessage.error('请求错误')
+                ElMessage.error('服务异常')
         }
 
         return Promise.reject(error.response.data)
@@ -44,12 +44,14 @@ axios.interceptors.response.use(success => success,
 )
 
 
-const local_host = '/api'
+// const local_host = '/api'
+
+const local_host = 'http://localhost:8080'
 
 
 // 用户登录，获取token
 export function getUserTokenAPI(username, password) {
-    return axios.post(local_host + "/users/token/create", { username, password })
+    return axios.post(local_host + "/login", { username, password })
 }
 
 // 获取当前登录用户信息
