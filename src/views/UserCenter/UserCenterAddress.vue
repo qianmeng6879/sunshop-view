@@ -2,49 +2,43 @@
   <div>
     <div style="display: flex;">
       <h2>收获地址列表</h2>
-      <a href="#" @click.prevent="onAddAddressButton" class="add_address">新增</a>
+      <a href="#" @click.prevent="onAddReceiveButton" class="add_Receive">新增</a>
     </div>
     <el-dialog destroy-on-close v-model="dialogVisible" :title="isEditState ? '编辑收货地址' : '新增收货地址'" width="30%">
       <el-form label-position="top" label-width="100px">
-        <el-form-item label="省份">
-          <el-input v-model="addressObj.province"></el-input>
-        </el-form-item>
-        <el-form-item label="城市">
-          <el-input v-model="addressObj.city"></el-input>
-        </el-form-item>
-        <el-form-item label="区域">
-          <el-input v-model="addressObj.area"></el-input>
+        <el-form-item>
+          <el-cascader :props="props" />
         </el-form-item>
         <el-form-item label="详细地址">
-          <el-input v-model="addressObj.detail"></el-input>
+          <el-input v-model="ReceiveObj.detail"></el-input>
         </el-form-item>
         <el-form-item label="收货人姓名">
-          <el-input v-model="addressObj.name"></el-input>
+          <el-input v-model="ReceiveObj.name"></el-input>
         </el-form-item>
         <el-form-item label="联系电话">
-          <el-input v-model="addressObj.phone"></el-input>
+          <el-input v-model="ReceiveObj.phone"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button v-if="isEditState" type="primary" @click="onEditAddressSubmit">修改</el-button>
-          <el-button v-else type="primary" @click="onCreateAddressSubmit">新增</el-button>
+          <el-button v-if="isEditState" type="primary" @click="onEditReceiveSubmit">修改</el-button>
+          <el-button v-else type="primary" @click="onCreateReceiveSubmit">新增</el-button>
         </span>
       </template>
     </el-dialog>
     <hr />
-    <el-table :data="addressData" style="width: 100%">
-      <el-table-column prop="province" label="省份"/>
+    <el-table :data="ReceiveData" style="width: 100%">
+      <el-table-column prop="province" label="省份" />
       <el-table-column prop="city" label="城市" />
-      <el-table-column prop="area" label="地区"/>
-      <el-table-column prop="detail" label="详细地址"/>
-      <el-table-column prop="name" label="联系人姓名"/>
+      <el-table-column prop="area" label="地区" />
+      <el-table-column prop="detail" label="详细地址" />
+      <el-table-column prop="name" label="联系人姓名" />
       <el-table-column prop="phone" label="联系电话" />
       <el-table-column label="操作">
         <template #default="scoped">
-          <el-button type="primary" @click="onEditAddressButton(scoped.row.id)">编辑</el-button>
-          <el-popconfirm title="确定要删除吗?" @confirm="onRemoveAddressButton(scoped.row.id)">
+          <el-button type="primary" @click="onEditReceiveButton(scoped.row.id)">编辑</el-button>
+          <el-popconfirm title="确定要删除吗?" @confirm="onRemoveReceiveButton(scoped.row.id)">
             <template #reference>
               <el-button type="danger">删除</el-button>
             </template>
@@ -58,21 +52,29 @@
 
 <script>
 import { reactive, ref } from 'vue'
-import { getAddressListAPI, addAddressAPI, editAddresssAPI, removeAddressAPI } from '@/api'
+import { getAddressListAPI, getReceiveListAPI, addReceiveAPI, editReceivesAPI, removeReceiveAPI } from '@/api'
 
 export default {
   mounted() {
-    getAddressListAPI().then(
+    getReceiveListAPI().then(
       response => {
-        this.addressData = response.data
+        this.ReceiveData = response.data.data
       }
     )
   },
+  data() {
+    return {
+      provinceList: [],
+      cityList: [],
+      areaList: [],
+      streetList: []
+    }
+  },
   setup() {
-    let addressData = ref([])
+    let ReceiveData = ref([])
     let dialogVisible = ref(false)
     let isEditState = ref(false)
-    let addressObj = reactive({
+    let ReceiveObj = reactive({
       id: null,
       province: '',
       city: '',
@@ -83,28 +85,36 @@ export default {
     })
 
     return {
-      addressData,
+      ReceiveData,
       dialogVisible,
-      addressObj,
+      ReceiveObj,
       isEditState
     }
   },
   methods: {
-    onAddAddressButton() {
+    onAddReceiveButton() {
       this.isEditState = false
-      let addKey = Object.keys(this.addressObj)
+      let addKey = Object.keys(this.ReceiveObj)
 
       addKey.forEach(element => {
-        this.addressObj[element] = ''
+        this.ReceiveObj[element] = ''
       })
       this.dialogVisible = true
 
+      // 第一次加载省级数据
+      if (this.provinceList.length == 0) {
+        getAddressListAPI(0).then(
+          (response) => {
+            this.provinceList = response.data.data
+          }
+        )
+      }
     },
-    onCreateAddressSubmit() {
-      addAddressAPI(this.addressObj).then(
+    onCreateReceiveSubmit() {
+      addReceiveAPI(this.ReceiveObj).then(
         response => {
           if (response.data) {
-            this.addressData.push(response.data)
+            this.ReceiveData.push(response.data)
             this.$message.success('新增收货地址成功')
 
           } else {
@@ -115,12 +125,12 @@ export default {
       )
     },
 
-    onEditAddressButton(id) {
-      let addKey = Object.keys(this.addressObj)
-      for (let address of this.addressData) {
-        if (address.id === id) {
+    onEditReceiveButton(id) {
+      let addKey = Object.keys(this.ReceiveObj)
+      for (let Receive of this.ReceiveData) {
+        if (Receive.id === id) {
           addKey.forEach(element => {
-            this.addressObj[element] = address[element]
+            this.ReceiveObj[element] = Receive[element]
           })
           break
         }
@@ -130,17 +140,17 @@ export default {
       this.dialogVisible = true
     },
 
-    onEditAddressSubmit() {
-      editAddresssAPI(this.addressObj.id, this.addressObj).then(
+    onEditReceiveSubmit() {
+      editReceivesAPI(this.ReceiveObj.id, this.ReceiveObj).then(
         () => {
 
-          this.addressData = this.addressData.map(address => {
-            if (address.id === this.addressObj.id) {
-              for (let key of Object.keys(address)) {
-                address[key] = this.addressObj[key]
+          this.ReceiveData = this.ReceiveData.map(Receive => {
+            if (Receive.id === this.ReceiveObj.id) {
+              for (let key of Object.keys(Receive)) {
+                Receive[key] = this.ReceiveObj[key]
               }
             }
-            return address
+            return Receive
           })
 
           this.dialogVisible = false
@@ -149,11 +159,11 @@ export default {
       )
     },
 
-    onRemoveAddressButton(id) {
-      removeAddressAPI(id).then(
+    onRemoveReceiveButton(id) {
+      removeReceiveAPI(id).then(
         () => {
           this.$message.success('删除成功')
-          this.addressData = this.addressData.filter(element => element.id !== id)
+          this.ReceiveData = this.ReceiveData.filter(element => element.id !== id)
         }
       )
     },
@@ -162,7 +172,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.add_address {
+.add_Receive {
   display: block;
   width: 80px;
   height: 30px;
@@ -175,7 +185,7 @@ export default {
   border-radius: 5px;
 }
 
-.add_address:hover {
+.add_Receive:hover {
   background: #ffd333;
   color: white;
 }

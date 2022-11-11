@@ -44,6 +44,17 @@ export default {
     },
     methods: {
         onRegister() {
+            if (this.userinfo.username) {
+                return this.$$message.error('用户名为空')
+            }
+
+            if (this.userinfo.nickname) {
+                return this.$$message.error('昵称为空')
+            }
+
+            if (this.userinfo.password) {
+                return this.$$message.error('密码为空')
+            }
 
             if (this.userinfo.password !== this.userinfo.confirmPassword) {
                 return this.$message.error("两次密码不一致")

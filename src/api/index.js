@@ -16,7 +16,7 @@ axios.defaults.transformResponse = [
 
 
 axios.interceptors.request.use(config => {
-    config.headers['token'] = localStorage.getItem('accessToken') || ""
+    config.headers['Authorization'] = 'Bearer ' + sessionStorage.getItem('accessToken') || ""
     return config
 })
 
@@ -29,11 +29,18 @@ axios.interceptors.response.use(success => success,
                 ElMessage.error(response.data.error)
                 break
             case 401:
+<<<<<<< HEAD
                 ElMessage.error("请先登录~")
                 router.push('/login')
+=======
+                ElMessage.error("请先登录~~")
+                setTimeout(() => {
+                    router.push('/login')
+                }, 500);
+>>>>>>> d13b0d4356cd260a385217d459976a38ba0f30bf
                 break
             case 403:
-                ElMessage.error("无权限")
+                ElMessage.error("无权访问")
                 break
             default:
                 ElMessage.error('服务异常')
@@ -44,8 +51,11 @@ axios.interceptors.response.use(success => success,
 )
 
 
+<<<<<<< HEAD
 // const local_host = '/api'
 
+=======
+>>>>>>> d13b0d4356cd260a385217d459976a38ba0f30bf
 const local_host = 'http://localhost:8080'
 
 
@@ -56,12 +66,12 @@ export function getUserTokenAPI(username, password) {
 
 // 获取当前登录用户信息
 export function getCurrentUserInfoAPI() {
-    return axios.get(local_host + '/users/current')
+    return axios.get(local_host + '/authorize')
 }
 
 // 用户注册
 export function userRegisterAPI(userinfo) {
-    return axios.post(local_host + '/users/create', { ...userinfo })
+    return axios.post(local_host + '/members', { ...userinfo })
 }
 
 // 商品分类列表
@@ -71,21 +81,28 @@ export function getCategoryListAPI() {
 
 // 收货地址列表
 export function getAddressListAPI() {
-    return axios.get(local_host + '/address/list')
+    return axios.get(local_host + '/address')
+}
+
+export function getReceiveListAPI(parentId) {
+    if (!parentId) {
+        parentId = 0
+    }
+    return axios.get(local_host + '/receive', { parent: parentId })
 }
 
 // 新增收货地址
-export function addAddressAPI(addressObj) {
+export function addReceiveAPI(addressObj) {
     return axios.post(local_host + '/address/create', { ...addressObj })
 }
 
 // 删除收货地址
-export function removeAddressAPI(addressId) {
+export function removeReceiveAPI(addressId) {
     return axios.delete(local_host + '/address/remove/' + addressId)
 }
 
 // 编辑收货地址信息
-export function editAddresssAPI(addressId, addressObj) {
+export function editReceiveAPI(addressId, addressObj) {
     return axios.put(local_host + '/address/edit/' + addressId, { ...addressObj })
 }
 
@@ -120,7 +137,7 @@ export function cancelFovoriteAPI(productId) {
 }
 
 // 收藏接口
-export function createFavoteAPI(productId){
+export function createFavoteAPI(productId) {
     return axios.post(local_host + '/favorites/create/' + productId)
 }
 
